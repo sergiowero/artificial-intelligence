@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RubickCubeComponent : MonoBehaviour {
+public class HumanInputController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

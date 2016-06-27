@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class OthelloComponent : MonoBehaviour {
+public class IAInputController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
