@@ -13,6 +13,14 @@ namespace Uag.AI.RubickCube
             base.Awake();
 
             instance = this;
+
+            RubickMatrix cube = new RubickMatrix();
+            Debug.Log("Initial State");
+            Debug.Log(cube);
+            cube.Shuffle();
+            Debug.Log(cube);
+            cube.Revert();
+            Debug.Log(cube);
         }
 
         protected override ControllerBase CreateController()

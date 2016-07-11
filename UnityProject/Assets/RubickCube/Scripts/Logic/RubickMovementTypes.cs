@@ -3,6 +3,7 @@ namespace Uag.AI.RubickCube
 {
     public enum RubickMovementTypes
     {
+        None = 0,
         TopTurnRight = 1,
         TopTurnLeft = -1,
         BottomTurnRight = 2,

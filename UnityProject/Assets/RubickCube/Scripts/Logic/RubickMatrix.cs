@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text;
+using System;
 
 namespace Uag.AI.RubickCube
 {
@@ -26,6 +28,7 @@ namespace Uag.AI.RubickCube
         public RubickMatrix()
         {
             m_matrix = new int[WIDTH * HEIGHT];
+            m_moveStack = new Stack<RubickMovementTypes>();
             Reset();
         }
 
@@ -44,13 +47,27 @@ namespace Uag.AI.RubickCube
             while (m_moveStack.Count > 0)
             {
                 var move = m_moveStack.Pop();
-
+                move = (RubickMovementTypes)(-((int)move)); // get the reverse move
+                Transform(move, false);
             }
         }
 
-        public void SaveState()
+        public void Apply()
         {
             m_moveStack.Clear();
+        }
+
+        public void Shuffle(int _steps=100)
+        {
+            Random rand = new Random(DateTime.Now.Millisecond);
+            while(_steps > 0)
+            {
+                int num = rand.Next(4) + 1;
+                num = rand.NextDouble() > 0.5 ? num : -num;
+                RubickMovementTypes move = (RubickMovementTypes)num;
+                Transform(move);
+                _steps--;
+            }
         }
 
         private void SetupResolveState()
@@ -91,9 +108,12 @@ namespace Uag.AI.RubickCube
             }
         }
 
-        private void Transform(RubickMovementTypes _move)
+        private void Transform(RubickMovementTypes _move, bool _save=true)
         {
-            m_moveStack.Push(_move);
+            if (_save)
+            {
+                m_moveStack.Push(_move);
+            }
             switch (_move)
             {
                 case RubickMovementTypes.TopTurnRight:
@@ -160,6 +180,17 @@ namespace Uag.AI.RubickCube
                 int newIndex = ToIndex(_col, i + _dir);
                 m_matrix[newIndex] = values[i];
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+            for (int i = 0; i < m_matrix.Length; i+=4)
+            {
+                str.AppendFormat("{0},{1},{2},{3}\n", m_matrix[i], m_matrix[i + 1], m_matrix[i + 2], m_matrix[i + 3]);
+            }
+
+            return str.ToString();
         }
 
         public static int ToIndex(int _x, int _y)
