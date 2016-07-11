@@ -9,17 +9,17 @@ namespace Uag.AI.Common.Trees
             Max
         }
 
-        public NodeType Type { get; private set; }
+        public NodeType type { get; private set; }
 
         public MinMaxNode(NodeType _type) : base()
         {
-            Type = _type;
+            type = _type;
         }
 
         public override Node<int> CreateChildNode()
         {
             NodeType type = NodeType.Max;
-            if (Type == NodeType.Max)
+            if (this.type == NodeType.Max)
                 type = NodeType.Min;
             return new MinMaxNode(type);
         }

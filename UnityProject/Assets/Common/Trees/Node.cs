@@ -7,19 +7,19 @@ namespace Uag.AI.Common.Trees
     {
         public List<Node<T>> m_children;
 
-        public ReadOnlyCollection<Node<T>> Children { get { return m_children.AsReadOnly(); } }
-        public T Value;
+        public ReadOnlyCollection<Node<T>> children { get { return m_children.AsReadOnly(); } }
+        public T value;
 
         public Node()
         {
             m_children = new List<Node<T>>();
-            Value = default(T);
+            value = default(T);
         }
 
         public void AddNode(T _value)
         {
             Node<T> node = CreateChildNode();
-            node.Value = _value;
+            node.value = _value;
             m_children.Add(node);
         }
 

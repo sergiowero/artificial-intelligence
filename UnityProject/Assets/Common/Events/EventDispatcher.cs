@@ -13,7 +13,7 @@ namespace Uag.AI.Common.Events
         {
             m_eventHandlers = new Dictionary<int, EventHandler>();
 
-            Array values = Enum.GetValues(_eventsType.GetType());
+            Array values = Enum.GetValues(_eventsType);
 
             foreach (int enumValue in values)
             {

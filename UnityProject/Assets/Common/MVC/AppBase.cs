@@ -6,20 +6,20 @@ namespace Uag.AI.Common.MVC
     {
         public static AppBase instance { get;  protected set; }
 
-        public ModelBase Model { get; private set; }
-        public ControllerBase Controller { get; private set; }
-        public ViewBase View { get; private set; }
+        public ModelBase model { get; private set; }
+        public ControllerBase controller { get; private set; }
+        public ViewBase view { get; private set; }
 
         protected virtual void Awake()
         {
             instance = this;
 
-            Model = CreateModel();
-            Controller = CreateController();
-            View = CreateView();
+            model = CreateModel();
+            controller = CreateController();
+            view = CreateView();
 
-            Controller.AddGeneralHandler(Model.HandleInput);
-            View.SubscribeHandlers(Model);
+            controller.AddGeneralHandler(model.HandleInput);
+            view.SubscribeHandlers(model);
         }
 
         protected abstract ModelBase CreateModel();
