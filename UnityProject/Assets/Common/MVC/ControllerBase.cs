@@ -10,6 +10,13 @@ namespace Uag.AI.Common.MVC
             Initialize(GetEventEnumType());
         }
 
+        public virtual void Init()
+        {
+
+        }
+        public abstract void OnStartApp();
+
+
         public abstract Type GetEventEnumType();
 
     }

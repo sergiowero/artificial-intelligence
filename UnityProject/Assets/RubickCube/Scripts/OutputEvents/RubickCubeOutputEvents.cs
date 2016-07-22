@@ -2,6 +2,7 @@
 {
     public enum RubickCubeOutputEvents
     {
+        State,
         Resolved
     }
 }

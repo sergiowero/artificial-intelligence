@@ -4,7 +4,7 @@ namespace Uag.AI.Common.MVC
 {
     public abstract class AppBase : MonoBehaviour
     {
-        public static AppBase instance { get;  protected set; }
+        public static AppBase instance { get; protected set; }
 
         public ModelBase model { get; private set; }
         public ControllerBase controller { get; private set; }
@@ -20,6 +20,15 @@ namespace Uag.AI.Common.MVC
 
             controller.AddGeneralHandler(model.HandleInput);
             view.SubscribeHandlers(model);
+
+            controller.Init();
+            model.Init();
+            view.Init();
+        }
+
+        protected virtual void Start()
+        {
+            controller.OnStartApp();
         }
 
         protected abstract ModelBase CreateModel();

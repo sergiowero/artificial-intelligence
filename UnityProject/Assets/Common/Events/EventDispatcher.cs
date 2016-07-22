@@ -54,6 +54,7 @@ namespace Uag.AI.Common.Events
 
         public void DispatchEvent(IEvent _event)
         {
+            m_generalHandler(_event);
             m_eventHandlers[_event.eventType](_event);
         }
     }

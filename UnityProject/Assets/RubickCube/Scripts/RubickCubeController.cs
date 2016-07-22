@@ -9,5 +9,27 @@ namespace Uag.AI.RubickCube
         {
             return typeof(RubickCubeInputEvents);
         }
+
+        public override void OnStartApp()
+        {
+            SendStart();
+            SendShuffle();
+            SendResolve();
+        }
+
+        public void SendStart()
+        {
+            DispatchEvent(new RubickCubeStartInputEvent());
+        }
+
+        public void SendShuffle()
+        {
+            DispatchEvent(new RubickCubeShuffleInputEvent(RubickCubeApp.instance.shuffleSteps));
+        }
+
+        public void SendResolve()
+        {
+            DispatchEvent(new RubickCubeResolveInputEvent());
+        }
     }
 }

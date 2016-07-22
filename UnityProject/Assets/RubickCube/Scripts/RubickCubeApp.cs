@@ -8,19 +8,14 @@ namespace Uag.AI.RubickCube
     {
         public static new RubickCubeApp instance { get; protected set; }
 
+        [Header("Config")]
+        public int shuffleSteps = 100;
+
         protected override void Awake()
         {
             base.Awake();
 
             instance = this;
-
-            RubickMatrix cube = new RubickMatrix();
-            Debug.Log("Initial State");
-            Debug.Log(cube);
-            cube.Shuffle();
-            Debug.Log(cube);
-            cube.Revert();
-            Debug.Log(cube);
         }
 
         protected override ControllerBase CreateController()

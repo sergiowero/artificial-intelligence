@@ -10,5 +10,10 @@ namespace Uag.AI.Othello
         {
             return typeof(OthelloInputEvents);
         }
+
+        public override void OnStartApp()
+        {
+            
+        }
     }
 }

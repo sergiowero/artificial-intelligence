@@ -5,7 +5,7 @@ namespace Uag.AI.Common.Trees
 {
     public class Node<T>
     {
-        public List<Node<T>> m_children;
+        private List<Node<T>> m_children;
 
         public ReadOnlyCollection<Node<T>> children { get { return m_children.AsReadOnly(); } }
         public T value;
