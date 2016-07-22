@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace Uag.AI.RubickCube
 {
     public class AStarTree
     {
         public RubickMatrix result { get; private set; }
+        public int iterations { get; private set; }
 
         private List<RubickMatrix> closedSet = new List<RubickMatrix>();
         private List<RubickMatrix> openSet = new List<RubickMatrix>();
@@ -99,7 +98,7 @@ namespace Uag.AI.RubickCube
 
             fScore.Clear();
             fScore[_start] = HeuristicCostEstimate(_start);
-            int iterations = 0;
+            iterations = 0;
             RubickMatrix current = null;
             while (openSet.Count > 0)
             {
@@ -107,7 +106,6 @@ namespace Uag.AI.RubickCube
                 current = FindLowestFScore();
                 if (current.IsResolved())
                 {
-                    Debug.Log(iterations);
                     result = current;
                     return;
                 }

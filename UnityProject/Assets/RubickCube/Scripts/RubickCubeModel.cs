@@ -48,18 +48,20 @@ namespace Uag.AI.RubickCube
         {
             rubickCube.Reset();
             rubickCube.Shuffle(_shuffleEvent.steps);
-            rubickCube.Apply();
             SendState();
         }
 
         public void Resolve()
         {
+            rubickCube.Apply();
             aStarSearchTree.Search(rubickCube);
+            int iterations = -1;
             if (aStarSearchTree.result != null)
             {
                 rubickCube = aStarSearchTree.result;
+                iterations = aStarSearchTree.iterations;
             }
-            SendState();
+            DispatchEvent(new RubickCubeResolvedOutputEvent((RubickMatrix)rubickCube.Clone(), iterations));
         }
 
         private void SendState()

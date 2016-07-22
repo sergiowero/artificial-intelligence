@@ -222,7 +222,7 @@ namespace Uag.AI.RubickCube
             {
                 str.AppendFormat("{0},{1},{2},{3}\n", m_matrix[i], m_matrix[i + 1], m_matrix[i + 2], m_matrix[i + 3]);
             }
-
+            str.AppendFormat("\n - Stack size {0}", m_moveStack.Count);
             return str.ToString();
         }
 
