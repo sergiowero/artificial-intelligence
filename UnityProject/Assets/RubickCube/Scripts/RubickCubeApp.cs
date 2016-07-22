@@ -8,6 +8,14 @@ namespace Uag.AI.RubickCube
     {
         public static new RubickCubeApp instance { get; protected set; }
 
+        public new RubickCubeController controller
+        {
+            get
+            {
+                return (RubickCubeController)base.controller;
+            }
+        }
+
         [Header("Config")]
         public int shuffleSteps = 100;
 

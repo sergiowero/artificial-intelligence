@@ -13,10 +13,6 @@ namespace Uag.AI.RubickCube
         private Dictionary<RubickMatrix, int> gScore = new Dictionary<RubickMatrix, int>();
         private Dictionary<RubickMatrix, int> fScore = new Dictionary<RubickMatrix, int>();
 
-        public AStarTree()
-        {
-        }
-
         private int GetGScore(RubickMatrix _node)
         {
             int val = int.MaxValue;
@@ -41,7 +37,7 @@ namespace Uag.AI.RubickCube
                 for (int j = 0; j < my.Length; j++)
                 {
                     if (my[j] != target[j])
-                        estimate ++;
+                        estimate++;
                 }
             }
             return estimate;
@@ -50,7 +46,7 @@ namespace Uag.AI.RubickCube
         private int DistanceBetween(RubickMatrix _a, RubickMatrix _b)
         {
             int dist = _a.stackSize - _b.stackSize;
-            
+
             return System.Math.Abs(dist) * 8;
         }
 
@@ -129,11 +125,11 @@ namespace Uag.AI.RubickCube
                     }
 
                     int tentativeGScore = GetGScore(current) + DistanceBetween(current, neighbor);
-                    if(!openSet.Contains(neighbor))
+                    if (!openSet.Contains(neighbor))
                     {
                         openSet.Add(neighbor);
                     }
-                    else if(tentativeGScore >= GetGScore(neighbor))
+                    else if (tentativeGScore >= GetGScore(neighbor))
                     {
                         continue;
                     }

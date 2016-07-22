@@ -12,11 +12,21 @@ namespace Uag.AI.RubickCube
             _model.AddEventHandler(RubickCubeOutputEvents.State, OnRubickStateChanged);
         }
 
+        public void ActionShuffle()
+        {
+            RubickCubeApp.instance.controller.SendShuffle();
+        }
+
+        public void ActionResolve()
+        {
+            RubickCubeApp.instance.controller.SendResolve();
+        }
+
         private void OnRubickStateChanged(IEvent _event)
         {
             RubickCubeStateOutputEvent stateEvent = (RubickCubeStateOutputEvent)_event;
             Debug.LogFormat("Resolved <b>{0}</b> \n{1}", stateEvent.rubickCube.IsResolved(), stateEvent.rubickCube);
-                
+
         }
     }
 }

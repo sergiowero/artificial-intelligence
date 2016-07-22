@@ -22,7 +22,7 @@ namespace Uag.AI.RubickCube
 
         public override void Init()
         {
-            
+
         }
 
         public override void HandleInput(IEvent _event)
@@ -46,6 +46,7 @@ namespace Uag.AI.RubickCube
 
         public void Shuffle(RubickCubeShuffleInputEvent _shuffleEvent)
         {
+            rubickCube.Reset();
             rubickCube.Shuffle(_shuffleEvent.steps);
             rubickCube.Apply();
             SendState();
@@ -54,7 +55,7 @@ namespace Uag.AI.RubickCube
         public void Resolve()
         {
             aStarSearchTree.Search(rubickCube);
-            if(aStarSearchTree.result != null)
+            if (aStarSearchTree.result != null)
             {
                 rubickCube = aStarSearchTree.result;
             }

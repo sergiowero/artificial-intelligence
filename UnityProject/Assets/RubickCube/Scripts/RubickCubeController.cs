@@ -13,8 +13,6 @@ namespace Uag.AI.RubickCube
         public override void OnStartApp()
         {
             SendStart();
-            SendShuffle();
-            SendResolve();
         }
 
         public void SendStart()
