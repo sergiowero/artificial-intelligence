@@ -33,6 +33,7 @@ namespace Uag.AI.RubickCube
         }
 
         public int stackSize { get { return m_moveStack.Count; } }
+        public List<RubickMovementTypes> moveStack { get { return m_moveStack; } }
 
         private int[] m_matrix;
 
@@ -204,25 +205,27 @@ namespace Uag.AI.RubickCube
         {
             for (int i = 4; i < 12; i++)
             {
-                var my = GetRelatives(i, m_matrix);
-                var theirs = other.GetRelativesByElem(m_matrix[i]);
-                for (int j = 0; j < my.Length; j++)
-                {
-                    if (my[j] != theirs[j])
-                        return false;
-                }
+                //var my = GetRelatives(i, m_matrix);
+                //var theirs = other.GetRelativesByElem(m_matrix[i]);
+                //for (int j = 0; j < my.Length; j++)
+                //{
+                //    if (my[j] != theirs[j])
+                //        return false;
+                //}
+                if (m_matrix[i] != other.m_matrix[i])
+                    return false;
             }
             return true;
         }
 
-        public override string ToString()
+        public string Print()
         {
             StringBuilder str = new StringBuilder();
             for (int i = 0; i < m_matrix.Length; i += 4)
             {
                 str.AppendFormat("{0},{1},{2},{3}\n", m_matrix[i], m_matrix[i + 1], m_matrix[i + 2], m_matrix[i + 3]);
             }
-            str.AppendFormat("\n - Stack size {0}", m_moveStack.Count);
+            //str.AppendFormat("\n - Stack size {0}", m_moveStack.Count);
             return str.ToString();
         }
 
