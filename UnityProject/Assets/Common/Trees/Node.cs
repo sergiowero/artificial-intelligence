@@ -3,29 +3,29 @@ using System.Collections.ObjectModel;
 
 namespace Uag.AI.Common.Trees
 {
-    public class Node<T>
+    public class Node
     {
-        private List<Node<T>> m_children;
+        private List<Node> m_children;
 
-        public ReadOnlyCollection<Node<T>> children { get { return m_children.AsReadOnly(); } }
-        public T value;
+        public ReadOnlyCollection<Node> children { get { return m_children.AsReadOnly(); } }
+        public int value;
 
         public Node()
         {
-            m_children = new List<Node<T>>();
-            value = default(T);
+            m_children = new List<Node>();
+            value = 0
         }
 
-        public void AddNode(T _value)
+        public void AddNode(int _value)
         {
-            Node<T> node = CreateChildNode();
+            Node node = CreateChildNode();
             node.value = _value;
             m_children.Add(node);
         }
 
-        public virtual Node<T> CreateChildNode()
+        public virtual Node CreateChildNode()
         {
-            return new Node<T>();
+            return new Node();
         }
     }
 }

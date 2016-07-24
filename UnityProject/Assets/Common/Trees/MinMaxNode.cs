@@ -1,7 +1,7 @@
 ﻿
 namespace Uag.AI.Common.Trees
 {
-    public class MinMaxNode : Node<int>
+    public class MinMaxNode : Node
     {
         public enum NodeType
         {
@@ -16,7 +16,7 @@ namespace Uag.AI.Common.Trees
             type = _type;
         }
 
-        public override Node<int> CreateChildNode()
+        public override Node CreateChildNode()
         {
             NodeType type = NodeType.Max;
             if (this.type == NodeType.Max)
