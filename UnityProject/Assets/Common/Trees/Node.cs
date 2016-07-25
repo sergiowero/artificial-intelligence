@@ -13,7 +13,7 @@ namespace Uag.AI.Common.Trees
         public Node()
         {
             m_children = new List<Node>();
-            value = 0
+            value = 0;
         }
 
         public void AddNode(int _value)
