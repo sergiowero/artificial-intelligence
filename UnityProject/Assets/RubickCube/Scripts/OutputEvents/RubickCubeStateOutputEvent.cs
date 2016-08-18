@@ -4,9 +4,9 @@ namespace Uag.AI.RubickCube
 {
     public class RubickCubeStateOutputEvent : IEvent
     {
-        public RubickMatrix rubickCube { get; private set; }
+        public RubickColorMatrix rubickCube { get; private set; }
 
-        public RubickCubeStateOutputEvent(RubickMatrix _cube)
+        public RubickCubeStateOutputEvent(RubickColorMatrix _cube)
         {
             rubickCube = _cube;
         }

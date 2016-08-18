@@ -4,11 +4,11 @@ namespace Uag.AI.RubickCube
 {
     public class RubickCubeResolvedOutputEvent : IEvent
     {
-        public RubickMatrix rubickCube { get; private set; }
+        public RubickColorMatrix rubickCube { get; private set; }
         public int iterations { get; private set; }
         public bool success { get; private set; }
 
-        public RubickCubeResolvedOutputEvent(RubickMatrix _cube, int _iterations)
+        public RubickCubeResolvedOutputEvent(RubickColorMatrix _cube, int _iterations)
         {
             rubickCube = _cube;
             iterations = _iterations;

@@ -6,13 +6,14 @@ namespace Uag.AI.RubickCube
 {
     public class RubickCubeModel : ModelBase
     {
-        public RubickMatrix rubickCube { get; private set; }
-        public AStarTree aStarSearchTree { get; private set; }
+        public RubickColorMatrix rubickCube { get; private set; }
+        public AStarTreeColor aStarSearchTree { get; private set; }
 
         public RubickCubeModel() : base()
         {
-            rubickCube = new RubickMatrix();
-            aStarSearchTree = new AStarTree();
+            rubickCube = new RubickColorMatrix();
+            aStarSearchTree = new AStarTreeColor();
+            //UnityEngine.Debug.Log(rubickCube.Print());
         }
 
         public override Type GetEventEnumType()
@@ -61,12 +62,12 @@ namespace Uag.AI.RubickCube
                 rubickCube = aStarSearchTree.result;
                 iterations = aStarSearchTree.iterations;
             }
-            DispatchEvent(new RubickCubeResolvedOutputEvent((RubickMatrix)rubickCube.Clone(), iterations));
+            DispatchEvent(new RubickCubeResolvedOutputEvent((RubickColorMatrix)rubickCube.Clone(), iterations));
         }
 
         private void SendState()
         {
-            DispatchEvent(new RubickCubeStateOutputEvent((RubickMatrix)rubickCube.Clone()));
+            DispatchEvent(new RubickCubeStateOutputEvent((RubickColorMatrix)rubickCube.Clone()));
         }
     }
 }
