@@ -4,7 +4,7 @@ using System;
 
 namespace Uag.AI.RubickCube
 {
-    public class RubickMatrix : ICloneable, IEquatable<RubickMatrix>
+    public class RubickMatrix : ICloneable, IEquatable<RubickMatrix>, IHeuristicCostEstimable
     {
         public const int ELEMS = 8;
         public const int WIDTH = 4;
@@ -97,6 +97,22 @@ namespace Uag.AI.RubickCube
                 }
             }
             return true;
+        }
+
+        public int HeuristicCostEstimate()
+        {
+            int estimate = 0;
+            for (int i = 4; i < 12; i++)
+            {
+                var my = GetRelatives(i);
+                var target = RubickMatrix.GetSpectedRelatives(GetValue(i));
+                for (int j = 0; j < my.Length; j++)
+                {
+                    if (my[j] != target[j])
+                        estimate++;
+                }
+            }
+            return estimate;
         }
 
         public int GetValue(int _idx)

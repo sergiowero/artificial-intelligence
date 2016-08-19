@@ -213,7 +213,7 @@ namespace Uag.AI.RubickCube
                 {
                     m_elapsedTime -= 0.25f;
                     var m = movementQueue[0];
-                    Debug.Log(m);
+                    //Debug.Log(m);
                     ApplyMove(m);
                     movementQueue.RemoveAt(0);
                 }

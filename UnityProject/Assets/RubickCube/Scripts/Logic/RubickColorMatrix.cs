@@ -6,12 +6,15 @@ namespace Uag.AI.RubickCube
 {
     public class RubickColorMatrix : ICloneable, IEquatable<RubickColorMatrix>, IHeuristicCostEstimable
     {
+        private static HashSet<int> s_hash = new HashSet<int>();
+
         private List<RubickColorPiece> m_pieces;
         public List<RubickColorPiece> pieces { get { return m_pieces; } }
 
         private List<RubickMovementTypes> m_moveStack;
         public int stackSize { get { return m_moveStack.Count; } }
         public List<RubickMovementTypes> moveStack { get { return m_moveStack; } }
+        //public RubickMatrix m_matrix;
 
         public RubickColorMatrix()
         {
@@ -26,11 +29,13 @@ namespace Uag.AI.RubickCube
             m_pieces.Add(new RubickColorPiece());
             m_pieces.Add(new RubickColorPiece());
             m_pieces.Add(new RubickColorPiece());
+            //m_matrix = new RubickMatrix();
             Reset();
         }
 
         public void Reset()
         {
+            //m_matrix.Reset();
             m_moveStack.Clear();
             m_pieces[0].Setup(0, RubickColor.Yellow, RubickOrientation.Front, RubickColor.Orange, RubickOrientation.Up, RubickColor.Blue, RubickOrientation.Left);
             m_pieces[1].Setup(1, RubickColor.Yellow, RubickOrientation.Front, RubickColor.Orange, RubickOrientation.Up, RubickColor.Green, RubickOrientation.Right);
@@ -51,11 +56,13 @@ namespace Uag.AI.RubickCube
                 move = (RubickMovementTypes)(-((int)move)); // get the reverse move
                 Transform(move, false);
             }
+            //m_matrix.Revert();
         }
 
         public void Apply()
         {
             m_moveStack.Clear();
+            //m_matrix.Apply();
         }
 
         public void Shuffle(int _steps = 100)
@@ -79,24 +86,21 @@ namespace Uag.AI.RubickCube
         public int HeuristicCostEstimate()
         {
             int estimate = 0;
+
             for (int i = 0; i < 6; i++)
             {
-                int last = -1;
-                int inc = 1;
+                s_hash.Clear();
                 for (int p = 0; p < pieces.Count; p++)
                 {
                     int curr = pieces[p].data[i];
-                    if (curr != last && last != -1 && curr != -1)
+                    if (curr != -1)
                     {
-                        estimate+= inc;
-                        inc++;
-                    }
-                    if (last == -1 && curr != -1)
-                    {
-                        last = curr;
+                        s_hash.Add(curr);
                     }
                 }
+                estimate += s_hash.Count - 1;
             }
+
             return estimate;
         }
 
@@ -115,31 +119,38 @@ namespace Uag.AI.RubickCube
                 //UnityEngine.Debug.LogFormat("Move <b>{0}</b>", _move);
                 m_moveStack.Add(_move);
             }
+            //m_matrix.Transform(_move);
             m_pieces.ForEach(p => p.Transform(_move));
+            m_pieces.Sort((p1, p2) =>
+            {
+                if (p1.state > p2.state)
+                    return 1;
+                else if (p2.state > p1.state)
+                    return -1;
+                else return 0;
+            });
         }
 
         public bool Equals(RubickColorMatrix other)
         {
-            return System.Object.ReferenceEquals(this, other);
+            //return System.Object.ReferenceEquals(this, other);
 
+            //If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
 
-            // If both are null, or both are same instance, return true.
-            //if (System.Object.ReferenceEquals(this, other))
-            //{
-            //    return true;
-            //}
+            for (int i = 0; i < m_pieces.Count; i++)
+            {
+                for (int d = 0; d < 6; d++)
+                {
+                    if (this.m_pieces[i].data[d] != other.m_pieces[i].data[d])
+                        return false;
+                }
+            }
 
-            //for (int i = 0; i < m_pieces.Count; i++)
-            //{
-            //    RubickColorPiece myPiece = this.m_pieces.Find(p => p.state == i);
-            //    RubickColorPiece noPiece = other.m_pieces.Find(p => p.state == i);
-            //    for(int d = 0; d < myPiece.data.Length; d++)
-            //    {
-            //        if (myPiece.data[d] != noPiece.data[d])
-            //            return false;
-            //    }
-            //}
-            //return true;
+            return true;
         }
 
         public string Print()
@@ -148,18 +159,21 @@ namespace Uag.AI.RubickCube
             str.Append("---------------------------|\n");
             for (int i = 0; i < m_pieces.Count; i++)
             {
-                str.AppendFormat(" <b>{0}</b> | {1} | {2} | {3} | {4} | {5} | {6} |\n", 
-                    m_pieces[i].state, 
+                str.AppendFormat(" <b>{0}</b>:<color=green>{7}</color> | {1} | {2} | {3} | {4} | {5} | {6} |\n",
+                    m_pieces[i].state,
                     m_pieces[i].data[0] == -1 ? "-" : m_pieces[i].data[0].ToString(),
                     m_pieces[i].data[1] == -1 ? "-" : m_pieces[i].data[1].ToString(),
                     m_pieces[i].data[2] == -1 ? "-" : m_pieces[i].data[2].ToString(),
                     m_pieces[i].data[3] == -1 ? "-" : m_pieces[i].data[3].ToString(),
                     m_pieces[i].data[4] == -1 ? "-" : m_pieces[i].data[4].ToString(),
-                    m_pieces[i].data[5] == -1 ? "-" : m_pieces[i].data[5].ToString());
+                    m_pieces[i].data[5] == -1 ? "-" : m_pieces[i].data[5].ToString(),
+                    m_pieces[i].pieceNum);
             }
             str.Append("---------------------------|\n");
             str.AppendFormat(" - Stack size {0}\n", m_moveStack.Count);
             str.Append("---------------------------|\n");
+            //str.Append("\n Matrix -----------------|\n");
+            //str.Append(m_matrix.Print());
             return str.ToString();
         }
 
@@ -202,7 +216,7 @@ namespace Uag.AI.RubickCube
             other.m_pieces.Clear();
             this.m_pieces.ForEach(p => other.m_pieces.Add((RubickColorPiece)p.Clone()));
             other.m_moveStack.AddRange(this.m_moveStack);
-            //UnityEngine.Debug.Log("orig \n :" + Print() + "\ncloned:\n" + other.Print());
+            //other.m_matrix = (RubickMatrix)this.m_matrix.Clone();
             return other;
         }
     }

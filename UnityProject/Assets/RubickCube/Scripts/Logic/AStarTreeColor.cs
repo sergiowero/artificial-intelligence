@@ -35,7 +35,7 @@ namespace Uag.AI.RubickCube
         {
             int dist = _a.stackSize - _b.stackSize;
 
-            return System.Math.Abs(dist) * 8;
+            return System.Math.Abs(dist);
         }
 
         private RubickColorMatrix FindLowestFScore()
@@ -60,6 +60,33 @@ namespace Uag.AI.RubickCube
         {
             List<RubickColorMatrix> neighbors = new List<RubickColorMatrix>();
 
+            RubickMovementTypes lastMove = _node.stackSize > 0 ? _node.moveStack[_node.moveStack.Count - 1] : RubickMovementTypes.None;
+            if (lastMove != RubickMovementTypes.None)
+            {
+                lastMove = (RubickMovementTypes)(-((int)lastMove));
+            }
+
+            var moves = System.Enum.GetValues(typeof(RubickMovementTypes));
+            for (int i = 0; i < moves.Length; i++)
+            {
+                RubickMovementTypes val = (RubickMovementTypes)moves.GetValue(i);
+                if (val != RubickMovementTypes.None && val != lastMove)
+                {
+                    RubickColorMatrix clone = (RubickColorMatrix)_node.Clone();
+                    clone.Transform(val);
+                    neighbors.Add(clone);
+                }
+            }
+
+            return neighbors;
+        }
+
+        private List<RubickColorMatrix> GetBestNeighbors(RubickColorMatrix _node)
+        {
+            List<RubickColorMatrix> neighbors = new List<RubickColorMatrix>();
+            int min = int.MaxValue;
+            RubickColorMatrix minNeightbor = null;
+
             var moves = System.Enum.GetValues(typeof(RubickMovementTypes));
             for (int i = 0; i < moves.Length; i++)
             {
@@ -68,10 +95,20 @@ namespace Uag.AI.RubickCube
                 {
                     RubickColorMatrix clone = (RubickColorMatrix)_node.Clone();
                     clone.Transform(val);
-                    neighbors.Add(clone);
+                    int cost = clone.HeuristicCostEstimate();
+                    if (cost < min)
+                    {
+                        min = cost;
+                        minNeightbor = clone;
+                    }
                 }
             }
 
+            if(min == _node.HeuristicCostEstimate())
+            {
+                UnityEngine.Debug.Log("Duh");
+            }
+            neighbors.Add(minNeightbor);
             return neighbors;
         }
 
@@ -89,7 +126,7 @@ namespace Uag.AI.RubickCube
             fScore[_start] = HeuristicCostEstimate(_start);
             iterations = 0;
             RubickColorMatrix current = null;
-            int attepts = 1000;
+            int attepts = 2000;
             while (openSet.Count > 0 && attepts > 0)
             {
                 attepts--;
@@ -111,8 +148,9 @@ namespace Uag.AI.RubickCube
 
                 IList<RubickColorMatrix> neighbors = GenerateNeighbors(current);
 
-                foreach (var neighbor in neighbors)
+                foreach (var nb in neighbors)
                 {
+                    RubickColorMatrix neighbor = nb;
                     if (closedSet.Contains(neighbor))
                     {
                         continue;
@@ -123,9 +161,13 @@ namespace Uag.AI.RubickCube
                     {
                         openSet.Add(neighbor);
                     }
-                    else if (tentativeGScore >= GetGScore(neighbor))
+                    else
                     {
-                        continue;
+                        neighbor = openSet.Find(n => n == neighbor);
+                        if (tentativeGScore >= GetGScore(neighbor))
+                        {
+                            continue;
+                        }
                     }
 
                     gScore[neighbor] = tentativeGScore;

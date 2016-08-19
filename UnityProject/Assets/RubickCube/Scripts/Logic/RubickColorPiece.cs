@@ -55,6 +55,7 @@ namespace Uag.AI.RubickCube
         };
 
         public int state { get; private set; } // position of the piece in the cube (8 options)
+        public int pieceNum { get; private set; } // position of the piece in the cube (8 options)
 
         private const int FRONT = 0;
         private const int UP = 1;
@@ -79,7 +80,7 @@ namespace Uag.AI.RubickCube
         public void Setup(int _initialState, RubickColor _col1, RubickOrientation _pos1, RubickColor _col2, RubickOrientation _pos2, RubickColor _col3, RubickOrientation _pos3)
         {
             // set state
-            state = _initialState;
+            pieceNum = state = _initialState;
 
             // reset data
             ClearData();
@@ -343,6 +344,7 @@ namespace Uag.AI.RubickCube
         {
             RubickColorPiece newPiece = new RubickColorPiece();
             newPiece.state = this.state;
+            newPiece.pieceNum = this.pieceNum;
             Array.Copy(this.data, newPiece.data, LENGTH);
             return newPiece;
         }
