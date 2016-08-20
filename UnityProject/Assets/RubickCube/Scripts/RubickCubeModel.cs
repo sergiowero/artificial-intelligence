@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections;
 using Uag.AI.Common.Events;
 using Uag.AI.Common.MVC;
+using aima.search.framework;
+using aima.search.uninformed;
+using aima.search.informed;
 
 namespace Uag.AI.RubickCube
 {
@@ -55,13 +59,27 @@ namespace Uag.AI.RubickCube
         public void Resolve()
         {
             rubickCube.Apply();
-            aStarSearchTree.Search(rubickCube);
+            Problem problem = new Problem(rubickCube,
+                new RubickSuccessorFunction(),
+                new RubickGoalTest(),
+                new RubickHeuristicFunction());
+            Search search = new IterativeDeepeningSearch();
+            //Search search = new AStarSearch(new GraphSearch());
+            SearchAgent agent = new SearchAgent(problem, search);
             int iterations = -1;
-            if (aStarSearchTree.result != null)
+            ArrayList actions = agent.getActions();
+            Hashtable info = agent.getInstrumentation();
+            for(int i = 0; i < actions.Count; i++)
             {
-                rubickCube = aStarSearchTree.result;
-                iterations = aStarSearchTree.iterations;
+                RubickMovementTypes move = (RubickMovementTypes)Enum.Parse(typeof(RubickMovementTypes), (string)actions[i]);
+                rubickCube.Transform(move);
             }
+            //aStarSearchTree.Search(rubickCube);
+            //if (aStarSearchTree.result != null)
+            //{
+            //    rubickCube = aStarSearchTree.result;
+            //    iterations = aStarSearchTree.iterations;
+            //}
             DispatchEvent(new RubickCubeResolvedOutputEvent((RubickColorMatrix)rubickCube.Clone(), iterations));
         }
 
