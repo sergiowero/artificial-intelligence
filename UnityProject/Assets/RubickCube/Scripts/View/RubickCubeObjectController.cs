@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Uag.AI.RubickCube
@@ -69,13 +70,16 @@ namespace Uag.AI.RubickCube
         }
         #endregion
 
-        public void ApplyMove(RubickMovementTypes _move)
+        public void ApplyMove(RubickMovementTypes _move, bool animated = false)
         {
             Transform t = null;
             switch (_move)
             {
                 case RubickMovementTypes.TopTurnRight:
-                    TurnRight(pieces[0], pieces[1], pieces[4], pieces[5]);
+                    if (!animated)
+                        TurnRight(pieces[0], pieces[1], pieces[4], pieces[5]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(0, -90, 0), pieces[0], pieces[1], pieces[4], pieces[5]));
                     t = pieces[0];
                     pieces[0] = pieces[4];
                     pieces[4] = pieces[5];
@@ -83,7 +87,10 @@ namespace Uag.AI.RubickCube
                     pieces[1] = t;
                     break;
                 case RubickMovementTypes.TopTurnLeft:
-                    TurnLeft(pieces[0], pieces[1], pieces[4], pieces[5]);
+                    if (!animated)
+                        TurnLeft(pieces[0], pieces[1], pieces[4], pieces[5]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(0, 90, 0), pieces[0], pieces[1], pieces[4], pieces[5]));
                     t = pieces[0];
                     pieces[0] = pieces[1];
                     pieces[1] = pieces[5];
@@ -91,7 +98,10 @@ namespace Uag.AI.RubickCube
                     pieces[4] = t;
                     break;
                 case RubickMovementTypes.BottomTurnRight:
-                    TurnRight(pieces[3], pieces[2], pieces[7], pieces[6]);
+                    if (!animated)
+                        TurnRight(pieces[3], pieces[2], pieces[7], pieces[6]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(0, -90, 0), pieces[3], pieces[2], pieces[7], pieces[6]));
                     t = pieces[3];
                     pieces[3] = pieces[7];
                     pieces[7] = pieces[6];
@@ -99,7 +109,10 @@ namespace Uag.AI.RubickCube
                     pieces[2] = t;
                     break;
                 case RubickMovementTypes.BottomTurnLeft:
-                    TurnLeft(pieces[3], pieces[2], pieces[7], pieces[6]);
+                    if (!animated)
+                        TurnLeft(pieces[3], pieces[2], pieces[7], pieces[6]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(0, 90, 0), pieces[3], pieces[2], pieces[7], pieces[6]));
                     t = pieces[3];
                     pieces[3] = pieces[2];
                     pieces[2] = pieces[6];
@@ -107,7 +120,10 @@ namespace Uag.AI.RubickCube
                     pieces[7] = t;
                     break;
                 case RubickMovementTypes.LeftTurnUp:
-                    TurnUp(pieces[0], pieces[3], pieces[7], pieces[4]);
+                    if (!animated)
+                        TurnUp(pieces[0], pieces[3], pieces[7], pieces[4]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(90, 0, 0), pieces[0], pieces[3], pieces[7], pieces[4]));
                     t = pieces[0];
                     pieces[0] = pieces[3];
                     pieces[3] = pieces[7];
@@ -115,7 +131,10 @@ namespace Uag.AI.RubickCube
                     pieces[4] = t;
                     break;
                 case RubickMovementTypes.LeftTurnDown:
-                    TurnDown(pieces[0], pieces[3], pieces[7], pieces[4]);
+                    if (!animated)
+                        TurnDown(pieces[0], pieces[3], pieces[7], pieces[4]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(-90, 0, 0), pieces[0], pieces[3], pieces[7], pieces[4]));
                     t = pieces[0];
                     pieces[0] = pieces[4];
                     pieces[4] = pieces[7];
@@ -123,7 +142,10 @@ namespace Uag.AI.RubickCube
                     pieces[3] = t;
                     break;
                 case RubickMovementTypes.RightTurnUp:
-                    TurnUp(pieces[1], pieces[2], pieces[6], pieces[5]);
+                    if (!animated)
+                        TurnUp(pieces[1], pieces[2], pieces[6], pieces[5]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(90, 0, 0), pieces[1], pieces[2], pieces[6], pieces[5]));
                     t = pieces[1];
                     pieces[1] = pieces[2];
                     pieces[2] = pieces[6];
@@ -131,7 +153,10 @@ namespace Uag.AI.RubickCube
                     pieces[5] = t;
                     break;
                 case RubickMovementTypes.RightTurnDown:
-                    TurnDown(pieces[1], pieces[2], pieces[6], pieces[5]);
+                    if (!animated)
+                        TurnDown(pieces[1], pieces[2], pieces[6], pieces[5]);
+                    else
+                        StartCoroutine(TurnAnimated(new Vector3(-90, 0, 0), pieces[1], pieces[2], pieces[6], pieces[5]));
                     t = pieces[1];
                     pieces[1] = pieces[5];
                     pieces[5] = pieces[6];
@@ -147,15 +172,37 @@ namespace Uag.AI.RubickCube
         {
             centerPivot.localRotation = Quaternion.identity;
             Attach(pieces);
-            centerPivot.Rotate(Vector3.up, -90);
+            centerPivot.Rotate(0, -90, 0);
             Dettach(pieces);
+            //TurnAnimated(new Vector3(0, -90, 0), pieces);
+        }
+
+        public IEnumerator TurnAnimated(Vector3 rotation, params Transform[] pieces)
+        {
+            float duration = 0.25f;
+            centerPivot.localRotation = Quaternion.identity;
+            Attach(pieces);
+            Quaternion start = centerPivot.rotation;
+            centerPivot.Rotate(rotation);
+            Quaternion end = centerPivot.rotation;
+            centerPivot.rotation = start;
+            float elapsedTime = 0.0f;
+            while (elapsedTime <= duration)
+            {
+                centerPivot.rotation = Quaternion.Lerp(start, end, elapsedTime / duration);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            centerPivot.rotation = end;
+            Dettach(pieces);
+            yield return null;
         }
 
         public void TurnLeft(params Transform[] pieces)
         {
             centerPivot.localRotation = Quaternion.identity;
             Attach(pieces);
-            centerPivot.Rotate(Vector3.up, 90);
+            centerPivot.Rotate(0, 90, 0);
             Dettach(pieces);
         }
 
@@ -209,12 +256,12 @@ namespace Uag.AI.RubickCube
             if (movementQueue.Count > 0)
             {
                 m_elapsedTime += Time.deltaTime;
-                if (m_elapsedTime > 0.25f)
+                if (m_elapsedTime > 0.3f)
                 {
-                    m_elapsedTime -= 0.25f;
+                    m_elapsedTime -= 0.3f;
                     var m = movementQueue[0];
                     //Debug.Log(m);
-                    ApplyMove(m);
+                    ApplyMove(m, true);
                     movementQueue.RemoveAt(0);
                 }
             }
